@@ -27,16 +27,13 @@ public class Client implements Serializable{
 	 private String lastName;
 	 @Column(nullable=false)
 	 private String address;
-	 @OneToMany
-	 @JoinColumn(name="client_id", referencedColumnName="id_client")
+	 @OneToMany(mappedBy="client")
 	 private List<Order> orders;
 	
 	 public Client() {
-		super();
 	 }
 
-	public Client(Long id, String firstName, String lastName, String address, List<Order> orders) {
-		super();
+	public Client(String firstName, String lastName, String address) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;

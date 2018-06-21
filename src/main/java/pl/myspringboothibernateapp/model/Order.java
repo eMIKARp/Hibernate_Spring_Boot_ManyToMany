@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
@@ -24,13 +26,14 @@ public class Order implements Serializable{
 	private String product;
 	@Column(name="details",length=512,nullable=false)
 	private String order_details;
+	@ManyToOne
+	@JoinColumn(name="client_id")
+	private Client client;
 
 	public Order() {
-		super();
 	}
 
 	public Order(String product, String order_details) {
-		super();
 		this.product = product;
 		this.order_details = order_details;
 	}
@@ -59,9 +62,19 @@ public class Order implements Serializable{
 		this.order_details = order_details;
 	}
 
+	
+	
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", product=" + product + ", order_details=" + order_details + "]";
+		return "Order [id=" + id + ", product=" + product + ", order_details=" + order_details +", "+client.getFirstName()+", "+ client.getLastName()+"]";
 	}
 
 }
