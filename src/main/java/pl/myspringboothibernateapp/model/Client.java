@@ -1,10 +1,13 @@
 package pl.myspringboothibernateapp.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,8 +30,11 @@ public class Client implements Serializable{
 	 private String lastName;
 	 @Column(nullable=false)
 	 private String address;
-	 @OneToMany(mappedBy="client")
-	 private List<Order> orders;
+	 @OneToMany(mappedBy="client",
+			 fetch=FetchType.EAGER,
+			 cascade= {CascadeType.PERSIST,CascadeType.REMOVE},
+			 orphanRemoval = true)
+	 private List<Order> orders = new ArrayList<>();
 	
 	 public Client() {
 	 }
@@ -39,6 +45,12 @@ public class Client implements Serializable{
 		this.address = address;
 	}
 
+	public void addOrder(Order order) {
+		order.setClient(this);
+		getOrders().add(order);
+	}
+	
+	
 	public Long getId() {
 		return id;
 	}

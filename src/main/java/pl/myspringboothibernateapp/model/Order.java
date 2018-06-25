@@ -1,10 +1,13 @@
 package pl.myspringboothibernateapp.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +16,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 
 @Entity
@@ -31,7 +37,9 @@ public class Order implements Serializable{
 	@JoinColumn(name="client_id")
 	private Client client;
 	
-	@ManyToMany
+	@ManyToMany(fetch=FetchType.EAGER,
+			cascade= CascadeType.PERSIST)
+	@Fetch(FetchMode.SELECT)
 	@JoinTable(name="order_products",
 	joinColumns = {@JoinColumn(name="order_id", referencedColumnName="id_order")},
 	inverseJoinColumns = {@JoinColumn(name="product_id", referencedColumnName="id_product")}
@@ -45,6 +53,7 @@ public class Order implements Serializable{
 	public Order(String order_details) {
 		super();
 		this.order_details = order_details;
+		this.products = new ArrayList();
 	}
 
 	public Order(String order_details, Client client, List<Product> products) {

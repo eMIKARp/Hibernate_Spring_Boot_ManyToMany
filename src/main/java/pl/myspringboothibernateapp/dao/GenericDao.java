@@ -29,7 +29,8 @@ public abstract class GenericDao<T,K> {
 	}
 	
 	public void remove(T entity) {
-		entityManager.remove(entity);
+		T managedEntity = entityManager.merge(entity);
+		entityManager.remove(managedEntity);
 	}
 	
 	public T get(K key) {

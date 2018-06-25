@@ -17,22 +17,22 @@ public class HibernateAppSpringBootOneToManyApplication {
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext ctx = SpringApplication.run(HibernateAppSpringBootOneToManyApplication.class, args);
+		
 		Client client = new Client("emil","karpowicz", "suwałki");
+		Order order = new Order("Z dostawą do domu");
+	    Product prod1 = new Product("Lg 42", 4800.00, "Dolby surround");
+		Product prod2 = new Product("Sony 50", 5200.00, "4K");
+		order.getProducts().add(prod1);
+		order.getProducts().add(prod2);
+		client.addOrder(order);
+		
 		ClientDao clientDao = ctx.getBean(ClientDao.class);
 		clientDao.save(client);
-
-		Order order = new Order("Z dostawą do domu");
-		order.setClient(client);
-		OrderDao orderDao = ctx.getBean(OrderDao.class);
-		orderDao.save(order);
-
-		Product prod1 = new Product("Lg 42", 4800.00, "Dolby surround");
-		Product prod2 = new Product("Sony 50", 5200.00, "4K");
-		ProductDao productDao = ctx.getBean(ProductDao.class);
-		productDao.save(prod1);
-		productDao.save(prod2);
 		
-		orderDao.addProductsToOrder(order.getId(), prod1, prod2);
+		Client getClient = clientDao.get(client.getId());
+		System.out.println("\n" + getClient);
+		
+		clientDao.removeAllOrders(client);		
 		
 		ctx.close();
 	}
